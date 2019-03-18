@@ -136,15 +136,16 @@ def delete_job(client_service, job_name):
         print('Got exception while deleting job')
         raise e
         
-def generate_job_with_required_fields(company_name, job_title, application_uri, description):
+def generate_job_with_required_fields(company_name):
     # Requisition id should be a unique Id in your system.
-    requisition_id = ''.join(
+    requisition_id = 'job_with_required_fields:' + ''.join(
         random.choice(string.ascii_uppercase + string.digits)
         for _ in range(16))
 
-    job_title = job_title
-    application_uris = [application_uri]
-    description = (''+description)
+    job_title = 'Software Engineer'
+    application_uris = ['http://careers.google.com']
+    description = ('Design, develop, test, deploy, maintain and improve '
+                   'software.')
 
     job = {
         'requisition_id': requisition_id,
@@ -160,11 +161,11 @@ def generate_job_with_required_fields(company_name, job_title, application_uri, 
 def run_sample():
     try:
         project_id = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-        #delete_company(client_service, "projects/zippy-folio-234822/companies/b3682c32-f231-4881-87c4-107f3b4b884e")
+        #delete_company(client_service, "projects/zippy-folio-234822/companies/043fbec9-f5a1-4b94-8755-b791f1db0295")
         #google_init = generate_company("Google", "San Francisco, CA")
         #google = create_company(client_service, google_init)
-        google_job_init = generate_job_with_required_fields("Google", "Software Engineer", "Google.com", "test")
-        google_job = create_job(client_service, google_job_init)
+        #google_job_init = generate_job_with_required_fields("352e22af-50cf-44fc-a396-ae9b253abe0b")
+        #google_job = create_job(client_service, google_job_init)
         response = client_service.projects().companies().list(
             parent=project_id).execute()
         print('Request Id: %s' %
@@ -173,9 +174,6 @@ def run_sample():
         for company in response.get('companies'):
             print('%s' % company.get('name'))
         print('')
-        #for job in response.get('jobs'):
-        #    print('%s' % job.get('name'))
-        #print('')
 
     except Error as e:
         print('Got exception while listing companies')
